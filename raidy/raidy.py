@@ -3,7 +3,7 @@ from aiovk.longpoll import BotsLongPoll
 from abc import ABC, abstractmethod
 from exceptions import *
 from logsys import Log
-from utils import mask_message, trimming_message
+from utils import MessagesUtil
 import keyboard
 import asyncio
 
@@ -25,7 +25,7 @@ class BaseRaid(ABC):
         pass
 
     @abstractmethod
-    def _enable_longpoll():
+    def _enable_longpoll(self):
         pass
 
 
@@ -54,6 +54,8 @@ class FullRaid(BaseRaid):
         self.lp = BotsLongPoll(self.api, mode=2, group_id=self.group_id) # longpoll object
 
         self.logger = Log("raid_log")
+
+        self.message_util = MessagesUtil(self.text, self.symbols)
 
     async def _check_group(self):
         """
@@ -104,8 +106,8 @@ class FullRaid(BaseRaid):
                     if "action" in object_updates:
                         self.logger.info(f"Start raid in {chat_id}")
                         while True:
-                            message_raid = mask_message(self.message_raid)
-                            message_raid = trimming_message(message_raid, self.symbols)
+                            message_raid = message_util.mask_message(self.message_raid)
+                            message_raid = message_util.trimming_message(message_raid, self.symbols)
                             try:
                                 if send_keyboard:
                                     # TODO: сделать генератор клавиатуры и отправлять сообщения с ней
