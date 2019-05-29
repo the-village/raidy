@@ -1,5 +1,5 @@
-# crinny/raid
-Ставь **Star** если любишь маму и crinny/raid...
+# crinny/raid (klassik2k16/raid)
+Ставь **Star** если любишь маму и crinny/raid (klassik2k16/raid)...
 
 ## Установка
 * Накати себе Git и Python 3, если их нет
