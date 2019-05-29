@@ -86,9 +86,36 @@ class FullRaid(BaseRaid):
 
     async def _run(self):
         """
-        Тут сама прослушка.
+        Получение событий и всё-всё-всё...
         """
-        # TODO: сделайте это... плиз..
+
+        while True:
+            data = await self.lp.wait()
+            updates = data["updates"]
+            print(updates)
+            if updates == []:
+                continue
+            else:
+                print(data)
+                updates = data["updates"]
+                if updates[0]["type"] == "message_new":
+                    object_updates = updates[0]["object"]
+                    chat_id = object_updates["peer_id"]
+                    if "action" in object_updates:
+                        self.logger.info(f"Start raid in {chat_id}")
+                        while True:
+                            message_raid = mask_message(self.message_raid)
+                            message_raid = trimming_message(message_raid, self.symbols)
+                            try:
+                                if send_keyboard:
+                                    # TODO: сделать генератор клавиатуры и отправлять сообщения с ней
+                                    pass
+                                elif send_keyboard == False:
+                                    await self.api.messages.send(message=message_raid, peer_id=chat_id, random_id=0)
+                            except Exception as e:
+                                self.logger.exception(e)
+                                break
+
 
     @staticmethod
     async def _enable_longpoll(api, group_id):
